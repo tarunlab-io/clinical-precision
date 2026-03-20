@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user profile information and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "doctor", "nurse"] },
+        "specialty": { "type": "string" },
+        "hospital": { "type": "string" },
+        "darkMode": { "type": "boolean" },
+        "notifications": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Patient": {
+      "title": "Patient Record",
+      "description": "Stores detailed patient information and medical history.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "age": { "type": "number" },
+        "gender": { "type": "string", "enum": ["Male", "Female", "Other"] },
+        "bloodType": { "type": "string" },
+        "diagnosis": { "type": "string" },
+        "status": { "type": "string", "enum": ["Stable", "Critical", "Recovering", "Observation"] },
+        "ward": { "type": "string" },
+        "room": { "type": "string" },
+        "admissionDate": { "type": "string", "format": "date" },
+        "physician": { "type": "string" },
+        "phone": { "type": "string" },
+        "emergencyContact": { "type": "string" },
+        "notes": { "type": "string" },
+        "vitals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": { "type": "string", "format": "date-time" },
+              "heartRate": { "type": "number" },
+              "bloodPressure": { "type": "string" },
+              "temp": { "type": "number" },
+              "spO2": { "type": "number" }
+            }
+          }
+        },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "age", "gender", "status", "createdBy"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents."
+    },
+    "/patients/{patientId}": {
+      "schema": "Patient",
+      "description": "Patient record documents."
+    }
+  }
+}
