@@ -56,7 +56,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 // --- Firebase ---
-import { auth, db, loginWithGoogle, logout, handleFirestoreError, OperationType } from './firebase';
+import { auth, db, loginWithGoogle, logout, handleFirestoreError, OperationType, loginWithEmail, signupWithEmail } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { 
   collection, 
@@ -1769,6 +1769,42 @@ const AddPatientView = ({ setActivePage, onAddPatient }: {
 // --- Components ---
 
 const Login = () => {
+  const [isSignup, setIsSignup] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      if (isSignup) {
+        await signupWithEmail(email, password);
+      } else {
+        await loginWithEmail(email, password);
+      }
+    } catch (err: any) {
+      console.error("Auth error:", err);
+      if (err.code === 'auth/wrong-password') {
+        setError('Incorrect password. Please try again.');
+      } else if (err.code === 'auth/user-not-found') {
+        setError('No user found with this email.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Invalid email address.');
+      } else if (err.code === 'auth/weak-password') {
+        setError('Password should be at least 6 characters.');
+      } else if (err.code === 'auth/email-already-in-use') {
+        setError('An account already exists with this email.');
+      } else {
+        setError('Authentication failed. Please check your credentials.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-surface-container-lowest p-6">
       <motion.div 
@@ -1776,20 +1812,76 @@ const Login = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md w-full bg-surface-container-low p-10 rounded-3xl shadow-2xl border border-outline-variant/10 text-center"
       >
-        <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
-          <Activity className="text-primary w-10 h-10" />
+        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <Activity className="text-primary w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-bold text-on-background mb-3 tracking-tight">Clinical Precision</h1>
-        <p className="text-on-surface-variant mb-10 text-sm leading-relaxed">
-          Advanced patient monitoring and clinical management system. Please sign in to access your dashboard.
+        <h1 className="text-2xl font-bold text-on-background mb-2 tracking-tight">Clinical Precision</h1>
+        <p className="text-on-surface-variant mb-8 text-sm leading-relaxed">
+          {isSignup ? 'Create your professional account' : 'Sign in to access your clinical dashboard'}
         </p>
+
+        <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+          <div className="text-left">
+            <label className="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-widest">Email Address</label>
+            <input 
+              type="email" 
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              placeholder="doctor@hospital.com"
+            />
+          </div>
+          <div className="text-left">
+            <label className="block text-xs font-bold text-on-surface-variant mb-1 uppercase tracking-widest">Password</label>
+            <input 
+              type="password" 
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              placeholder="••••••••"
+            />
+          </div>
+
+          {error && (
+            <div className="p-3 bg-error/10 border border-error/20 rounded-xl flex items-center gap-3 text-error text-xs font-medium">
+              <AlertTriangle size={14} />
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-4 bg-primary text-white rounded-xl font-bold hover:bg-primary-container transition-all active:scale-[0.98] shadow-lg shadow-primary/20 disabled:opacity-50"
+          >
+            {loading ? 'Processing...' : (isSignup ? 'Create Account' : 'Sign In')}
+          </button>
+        </form>
+
+        <div className="flex items-center gap-4 mb-6">
+          <div className="h-px bg-outline-variant/20 flex-1"></div>
+          <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-50">OR</span>
+          <div className="h-px bg-outline-variant/20 flex-1"></div>
+        </div>
         
         <button
           onClick={() => loginWithGoogle()}
-          className="w-full py-4 px-6 bg-primary text-white rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-primary-container transition-all active:scale-[0.98] shadow-lg shadow-primary/20"
+          className="w-full py-3 px-6 bg-surface-container-lowest text-on-surface border border-outline-variant/20 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-surface-container-low transition-all active:scale-[0.98]"
         >
-          <LogIn size={20} />
-          Sign in with Google
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+          Continue with Google
+        </button>
+
+        <button 
+          onClick={() => {
+            setIsSignup(!isSignup);
+            setError(null);
+          }}
+          className="mt-6 text-xs font-bold text-primary hover:underline"
+        >
+          {isSignup ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
         </button>
         
         <p className="mt-8 text-[10px] text-on-surface-variant uppercase tracking-widest font-bold opacity-50">
@@ -1805,6 +1897,14 @@ const Login = () => {
 export default function App() {
   const [user, loading, error] = useAuthState(auth);
   const [activePage, setActivePage] = useState<Page>('dashboard');
+
+  // Reset page on logout
+  useEffect(() => {
+    if (!user && !loading) {
+      setActivePage('dashboard');
+    }
+  }, [user, loading]);
+
   const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
