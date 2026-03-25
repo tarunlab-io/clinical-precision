@@ -384,16 +384,24 @@ const Sidebar = ({ activePage, setActivePage, onEmergency }: {
         })}
       </nav>
 
-      <div className="px-6 mt-auto">
-        <button 
-          onClick={onEmergency}
-          className="w-full py-3 px-4 bg-error text-white font-bold text-xs uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-error/20"
-        >
-          <AlertTriangle size={16} />
-          Emergency Alert
-        </button>
-      </div>
-    </aside>
+<div className="px-6 mt-auto">
+  <button
+    onClick={onEmergency}
+    className="w-full py-3 px-4 bg-error text-white font-bold text-xs uppercase tracking-widest rounded-lg flex items-center justify-center gap-2"
+  >
+    <AlertTriangle size={16} />
+    Emergency Alert
+  </button>
+</div>
+
+{/* Footer */}
+<div className="p-3 text-xs text-gray-400 border-t text-center leading-relaxed">
+  <p>© 2026 Clinical Precision</p>
+  <p>Developed by Tarunaditya Kumar</p>
+</div>
+
+</aside>
+    
   );
 };
 
