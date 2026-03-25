@@ -1,58 +1,35 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  
-  --color-primary: #004ac6;
-  --color-primary-container: #2563eb;
-  --color-secondary: #006c49;
-  --color-secondary-container: #6cf8bb;
-  --color-tertiary: #943700;
-  
-  --color-surface: var(--surface);
-  --color-surface-container-low: var(--surface-container-low);
-  --color-surface-container-lowest: var(--surface-container-lowest);
-  --color-on-surface: var(--on-surface);
-  --color-on-surface-variant: var(--on-surface-variant);
-  --color-outline-variant: var(--outline-variant);
-
-  --color-error: #ba1a1a;
-  --color-error-container: #ffdad6;
-}
-
-@layer base {
-  :root {
-    --surface: #f8f9ff;
-    --surface-container-low: #eff4ff;
-    --surface-container-lowest: #ffffff;
-    --on-surface: #0b1c30;
-    --on-surface-variant: #434655;
-    --outline-variant: #c3c6d7;
+@layer utilities {
+  .glass {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.5);
   }
 
-  .dark {
-    --surface: #0b1c30;
-    --surface-container-low: #1a2c42;
-    --surface-container-lowest: #05101d;
-    --on-surface: #f1f5f9;
-    --on-surface-variant: #94a3b8;
-    --outline-variant: #334155;
+  .glass-strong {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.6);
   }
 
-  body {
-    @apply bg-surface text-on-surface font-sans antialiased transition-colors duration-300;
+  .premium-shadow {
+    box-shadow: 0 20px 40px rgba(0,74,198,0.08),
+                0 4px 12px rgba(0,0,0,0.04);
+  }
+
+  .dynamic-bg {
+    background: linear-gradient(120deg,#f8f9ff,#eef4ff,#f8f9ff);
+    background-size: 200% 200%;
+    animation: gradientShift 12s ease infinite;
   }
 }
 
-/* Custom scrollbar for that clinical feel */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+@keyframes gradientShift {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
 }
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #d3e4fe;
-  border-radius: 10px;
-}
+
+.h2 { font-size: 20px; font-weight: 600; }
+.body { font-size: 14px; color: #555; }
