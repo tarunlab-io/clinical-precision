@@ -349,61 +349,74 @@ const Sidebar = ({ activePage, setActivePage, onEmergency }: {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col h-screen w-64 border-r border-outline-variant/15 bg-surface-container-low py-8 shrink-0">
-      <div className="px-6 mb-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded flex items-center justify-center text-white shadow-sm">
-            <Activity size={24} />
-          </div>
-          <div>
-            <h2 className="text-xl font-black tracking-tight text-primary leading-none">Medical Center</h2>
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1 font-bold">Critical Care Unit</p>
-          </div>
+  <aside className="hidden md:flex flex-col h-screen w-64 bg-white border-r border-gray-200">
+
+    {/* Logo */}
+    <div className="px-6 py-6">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+          <Activity size={22} />
+        </div>
+        <div>
+          <h2 className="text-sm font-semibold text-gray-900 tracking-wide">
+            MEDICAL CENTER
+          </h2>
+          <p className="text-[10px] text-gray-400 tracking-[0.2em] uppercase">
+            Critical Care Unit
+          </p>
         </div>
       </div>
-      
-      <nav className="flex-1 px-4 space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activePage === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActivePage(item.id as Page)}
-              className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 transition-all duration-200 rounded-lg group",
-                isActive 
-                  ? "text-primary font-bold border-r-4 border-primary bg-surface-container-lowest shadow-sm" 
-                  : "text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest/50"
-              )}
-            >
-              <Icon size={20} />
-              <span className="text-sm font-medium">{item.label}</span>
-            </button>
-          );
-        })}
-      </nav>
+    </div>
 
-<div className="px-6 mt-auto">
-  <button
-    onClick={onEmergency}
-    className="w-full py-3 px-4 bg-error text-white font-bold text-xs uppercase tracking-widest rounded-lg flex items-center justify-center gap-2"
-  >
-    <AlertTriangle size={16} />
-    Emergency Alert
-  </button>
+    {/* Navigation */}
+    <nav className="flex-1 px-3 space-y-1">
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        const isActive = activePage === item.id;
 
-  {/* Footer */}
-  <div className="mt-6 text-[10px] tracking-[0.2em] uppercase text-gray-500 text-center">
-    <p>© 2026 • Clinical Precision</p>
-    <div className="w-10 h-[2px] bg-gray-600 mx-auto my-2 rounded-full opacity-40"></div>
-    <p className="text-gray-600">Developed by Tarunaditya Kumar</p>
-  </div>
-</div>  {/* ✅ THIS WAS MISSING */}
+        return (
+          <button
+            key={item.id}
+            onClick={() => setActivePage(item.id as Page)}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200
+              ${isActive
+                ? "bg-blue-50 text-blue-600 font-semibold"
+                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+              }`}
+          >
+            <Icon size={18} className={isActive ? "text-blue-600" : ""} />
+            <span>{item.label}</span>
+          </button>
+        );
+      })}
+    </nav>
 
-</aside>
+    {/* Bottom Section */}
+    <div className="px-4 pb-6 space-y-4">
+
+      {/* Emergency Button */}
+      <button
+        onClick={onEmergency}
+        className="w-full py-3 rounded-lg bg-red-600 text-white text-xs font-semibold tracking-widest uppercase flex items-center justify-center gap-2 shadow-sm hover:bg-red-700 transition"
+      >
+        <AlertTriangle size={14} />
+        Emergency Alert
+      </button>
+
+      {/* Soft Divider */}
+      <div className="h-px bg-gray-100"></div>
+
+      {/* Footer */}
+      <div className="text-center text-[10px] uppercase tracking-[0.2em] text-gray-400">
+        <p>© 2026 • Clinical Precision</p>
+        <p className="mt-2 text-gray-400">Developed by Tarunaditya Kumar</p>
+      </div>
+
+    </div>
+
+  </aside>
+);
     
-  );
 };
 
 const TopBar = ({ title, searchQuery, setSearchQuery, onLogout, userAvatar, userName, setActivePage }: { title: string, searchQuery: string, setSearchQuery: (s: string) => void, onLogout: () => void, userAvatar: string, userName: string, setActivePage: (p: Page) => void }) => {
