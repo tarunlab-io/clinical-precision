@@ -392,13 +392,14 @@ const Sidebar = ({ activePage, setActivePage, onEmergency }: {
     <AlertTriangle size={16} />
     Emergency Alert
   </button>
-</div>
 
-{/* Footer */}
-<div className="p-3 text-xs text-gray-400 border-t text-center leading-relaxed">
-  <p>© 2026 Clinical Precision</p>
-  <p>Developed by Tarunaditya Kumar</p>
-</div>
+  {/* Footer */}
+  <div className="mt-6 text-[10px] tracking-[0.2em] uppercase text-gray-500 text-center">
+    <p>© 2026 • Clinical Precision</p>
+    <div className="w-10 h-[2px] bg-gray-600 mx-auto my-2 rounded-full opacity-40"></div>
+    <p className="text-gray-600">Developed by Tarunaditya Kumar</p>
+  </div>
+</div>  {/* ✅ THIS WAS MISSING */}
 
 </aside>
     
